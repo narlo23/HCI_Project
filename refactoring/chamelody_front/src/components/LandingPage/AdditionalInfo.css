@@ -1,0 +1,22 @@
+.right_table {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.share_img {
+  width: 90%;
+}
+
+.notion_img,
+.github_img {
+  width: 80%;
+}
+
+.who_img {
+  width: 80%;
+}
+
+.youtube_img {
+  width: 80%;
+}
