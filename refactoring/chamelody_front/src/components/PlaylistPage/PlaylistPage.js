@@ -6,6 +6,7 @@ import Emoji from "../EmotionSelectionPage/Emoji";
 import thumbs_up from "../../images/thumbs_up.png";
 import spotify_logo from "../../images/spotify_logo.png";
 import logo from "../../images/logo_only.png";
+
 import "./PlaylistPage.css";
 
 const word_blocks = [
@@ -27,7 +28,7 @@ function PlaylistPage() {
   useEffect(() => {
     const generateRandomEmojis = () => {
       const emojis = [fromEmoji, toEmoji];
-      const numEmojis = Math.floor(Math.random() * 10) + 1; // Generate a random number between 1 and 10
+      const numEmojis = Math.floor(Math.random() * 6) + 5; // Generate a random number between 5 and 10
 
       const randomEmojis = [];
       for (let i = 0; i < numEmojis; i++) {
@@ -43,22 +44,42 @@ function PlaylistPage() {
 
   function FallingEmoji({ emoji }) {
     const [position, setPosition] = useState({
-      top: `${Math.random() * 100}vh`,
+      top: `${Math.random() * window.innerHeight}px`,
       left: `${Math.random() * 100}vw`,
       width: `${Math.random() * 300}px`,
     });
 
     useEffect(() => {
-      const animationDuration = 3000; // milliseconds
+      const animationDuration = 10000; // milliseconds
 
-      setTimeout(() => {
-        setPosition({
-          top: "100vh",
-          left: position.left,
-          width: position.width,
-        });
-      }, animationDuration);
-    }, [position]);
+      let startTime = null;
+
+      const updatePosition = (timestamp) => {
+        if (!startTime) {
+          startTime = timestamp;
+        }
+
+        const progress = timestamp - startTime;
+
+        if (progress >= animationDuration) {
+          setPosition(() => ({
+            top: `${Math.random() * window.innerHeight}px`,
+            left: `${Math.random() * 100}vw`,
+            width: `${Math.random() * 200}px`,
+          }));
+
+          startTime = timestamp;
+        }
+
+        requestAnimationFrame(updatePosition);
+      };
+
+      requestAnimationFrame(updatePosition);
+
+      return () => {
+        cancelAnimationFrame(requestAnimationFrame);
+      };
+    }, []);
 
     return (
       <div
@@ -74,6 +95,9 @@ function PlaylistPage() {
 
   return (
     <div className="animation_bg">
+      {fallingEmojis.map((emoji, index) => (
+        <FallingEmoji key={index} emoji={emoji} />
+      ))}
       <div className="left">
         <TitleLogo />
 
@@ -127,18 +151,20 @@ function PlaylistPage() {
                       "https://open.spotify.com/track/" + music.id;
                   }}
                 >
-                  <div className="playlist-title">{music.name}</div>
-                  <div className="playlist-artists">{music.artists}</div>
+                  <div className="album-cover">
+                    <img className="" src={spotify_logo} alt="spotify_logo" />
+                    {/*<AlbumCover albumId='4aawyAB9vmqN3uQ7FjRGTy' />*/}
+                  </div>
+                  <div className="track-info">
+                    <div className="playlist-title">{music.name}</div>
+                    <div className="playlist-artists">{music.artists}</div>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </div>
-
-      {fallingEmojis.map((emoji, index) => (
-        <FallingEmoji key={index} emoji={emoji} />
-      ))}
     </div>
   );
 }
