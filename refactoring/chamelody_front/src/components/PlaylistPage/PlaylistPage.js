@@ -119,7 +119,14 @@ function PlaylistPage() {
           <div className="playlist-bg">
             <div className="playlist-box">
               {location.state.musicList.map((music, index) => (
-                <div key={index} className="playlist-list">
+                <div
+                  key={index}
+                  className="playlist-list"
+                  onClick={() => {
+                    window.location.href =
+                      "https://open.spotify.com/track/" + music.id;
+                  }}
+                >
                   <div className="playlist-title">{music.name}</div>
                   <div className="playlist-artists">{music.artists}</div>
                 </div>
